@@ -1,6 +1,6 @@
 # basicRAT
 
-This is a cross-platform Python 2.x Remote Access Trojan (RAT), basicRAT was created to maintain a clean design full-featured Python RAT. Currently a work in progress and still being actively hacked on.
+This is a cross-platform Python 2.7.x Remote Access Trojan (RAT). Currently still a work in progress, and gets hacked on as time allows. See the `binaries/` folder for prebuilt client executables.
 
 **Disclaimer: This RAT is for research purposes only, and should only be used on authorized systems. Accessing a computer system or network without authorization or explicit permission is illegal.**
 
@@ -16,6 +16,14 @@ This is a cross-platform Python 2.x Remote Access Trojan (RAT), basicRAT was cre
 * Client reconnect
 
 ## Usage
+
+### Client
+```
+C:\>basicRAT_client.exe --ip 127.0.0.1 --port 1337 --timeout 30
+```
+Where `ip` is the basicRAT server IP address, `port` is the server listening port, and `timeout` is the number of seconds the client waits to attempt a reconnect to the server (if disconnected). These are the default values if not specified, you will likely need to supply at least an IP and port if using basicRAT outside of your local system.
+
+### Server
 ```
 $ python basicRAT_server.py --port 1337
 
@@ -64,48 +72,28 @@ Linux sandbox3 4.9.17-c9 #1 SMP Thu Mar 23 01:38:54 UTC 2017 x86_64 x86_64 x86_6
 execute completed.
 ```
 
-## Build a stand-alone executable
-Keep in mind that before building you will likely want to modify both the `HOST` and `PORT` variables located at the top of `basicRAT_client.py` to fit your needs.
+## Build your own stand-alone executable
+If you'd rather not use one the prebuilt binaries, you can easily create your own executable like so:
 
-On Linux you will need Python 2.x, [PyInstaller](http://www.pyinstaller.org/), and pycrypto. Then run something like `pyinstaller2 --onefile basicRAT_client.py` and it should generate a `dist/` folder that contains a stand-alone ELF executable.
+On Windows you will need:
+  * [Python 2.7.x](https://www.python.org/downloads/)
+  * [PyInstaller](http://www.pyinstaller.org/)
+  * [PyCrypto 2.6 for Python 2.7](http://www.voidspace.org.uk/python/modules.shtml#pycrypto)
+  * [PyWin32](https://sourceforge.net/projects/pywin32/files/pywin32/)
+  * [pefile](https://github.com/erocarrera/pefile)
 
-On Windows you will need Python 2.x, PyInstaller, pycrypto, pywin32, and pefile. Then run something like `C:\path\to\PyInstaller-3.2\PyInstaller-3.2\pyinstaller.py --onefile basicRAT_client.py` and it should generate a `dist/` folder that contains a stand-alone PE (portable executable).
+Then run something like `C:\path\to\PyInstaller-3.2\PyInstaller-3.2\pyinstaller.py --onefile basicRAT_client.py` from the basicRAT repo folder and it should generate a `dist/` folder that will contain a stand-alone PE (portable executable).
 
-## Todo
-* Interactive shell
-* Client binary generation tool (cross-platform)
-  * Pyinstaller
-  * Switch options for remote IP, port, etc
-* Persistence (cross-platform)
-  * Windows: Registry keys, WMIC, Startup Dir
-  * Linux: cron jobs, services, modprobe
-  * macOS: LaunchAgent, LaunchDaemons
-* Privilege Escalation (getsystem-esque, dirty cow)
-* Common C2 Protocols (HTTP, DNS)
-* Clean log files
-    * Linux: bash history, var logs, audit logs, etc
-    * Windows: Event logs, prefetch, etc
-* Screenshot
-* Keylogger
-* Expand toolkit (unrar, sysinfo)
-* Scanning utilities (probe scan / ping sweep, scanning subnet)
-* Password dumping (mimikatz / gsecdump)
-* Tunneling / Pivoting (ssh)
-* Anti-virus detection and evasion
-* VM and Sandbox detection
-* Exfil browser history
-* Search file system for sensitive information using regex
-    * addresses, credit cards numbers, socials, PII, etc
-* Detect web cameras and take snapshots
-* Steal wifi passwords
+On Linux/macOS you will need:
+  * [Python 2.7.x](https://www.python.org/downloads/)
+  * PyInstaller & PyCrypto - `$ pip install pyinstaller pycrypto`
 
-## Authors
+Then run something like `pyinstaller --onefile basicRAT_client.py` from the basicRAT repo folder and it should generate a `dist/` folder that will contain a stand-alone ELF/Mach-O executable.
+
+## Contributors
 * Austin Jackson [@vesche](https://github.com/vesche)
 * Skyler Curtis [@deadPix3l](https://github.com/deadPix3l)
-
-## Thanks
-* [@bozhu](https://github.com/bozhu), AES-GCM Python implementation.
-* [@reznok](https://github.com/reznok), multiple client connection prototype.
+* [@reznok](https://github.com/reznok), multiple client connection prototype
 
 ## Other open-source Python RATs for Reference
 * [nathanlopez/Stitch](https://github.com/nathanlopez/Stitch)
