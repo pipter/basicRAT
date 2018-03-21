@@ -1,7 +1,7 @@
 *.pyc
-*.spec
-build/
-dist/
+*.build/
 
 REVAMP.md
 staging/
+
+clean.sh

@@ -77,18 +77,18 @@ If you'd rather not use one the prebuilt binaries, you can easily create your ow
 
 On Windows you will need:
   * [Python 3.6.x](https://www.python.org/downloads/)
-  * [PyInstaller](http://www.pyinstaller.org/)
-  * [PyCrypto 2.6 for Python 3.x](http://www.voidspace.org.uk/python/modules.shtml#pycrypto)
-  * [PyWin32](https://sourceforge.net/projects/pywin32/files/pywin32/)
-  * [pefile](https://github.com/erocarrera/pefile)
+  * [Nuitka](http://nuitka.net/)
+    * On Windows you will need a C compiler, see the [Nutika usage page](https://github.com/kayhayen/Nuitka#usage).
+  * [PyWin32 for Python 3.6.x](https://sourceforge.net/projects/pywin32/files/pywin32/)
+  * pefile & PyCryptodome - `C:\> python -m pip install pefile pycryptodome`
 
-Then run something like `C:\path\to\PyInstaller-3.2\PyInstaller-3.2\pyinstaller.py --onefile basicRAT_client.py` from the basicRAT repo folder and it should generate a `dist/` folder that will contain a stand-alone PE (portable executable).
+Then run `nuitka --recurse-all basicRAT_client.py` inside the `basicRAT/` repo, which should create a `basicRAT_client.exe` stand-alone PE (portable executable).
 
 On Linux/macOS you will need:
   * [Python 3.6.x](https://www.python.org/downloads/)
-  * PyInstaller & PyCrypto - `$ pip install pyinstaller pycrypto`
+  * PyCryptodome - `$ pip install pycryptodome`
 
-Then run something like `pyinstaller --onefile basicRAT_client.py` from the basicRAT repo folder and it should generate a `dist/` folder that will contain a stand-alone ELF/Mach-O executable.
+Then run `nuitka --recurse-all basicRAT_client.py` inside the `basicRAT/` repo, which should create a `basicRAT_client.exe` (the file extension is unimportant) which should create a stand-alone ELF/Mach-O executable.
 
 ## Contributors
 * Austin Jackson [@vesche](https://github.com/vesche)
