@@ -86,7 +86,7 @@ Then run `nuitka --recurse-all basicRAT_client.py` inside the `basicRAT/` repo, 
 
 On Linux/macOS you will need:
   * [Python 3.6.x](https://www.python.org/downloads/)
-  * PyCryptodome - `$ pip install pycryptodome`
+  * Nuitka & PyCryptodome - `$ pip install nuitka pycryptodome`
 
 Then run `nuitka --recurse-all basicRAT_client.py` inside the `basicRAT/` repo, which should create a `basicRAT_client.exe` (the file extension is unimportant) which should create a stand-alone ELF/Mach-O executable.
 
