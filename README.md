@@ -1,6 +1,6 @@
 # basicRAT
 
-This is a cross-platform Python 2.7.x Remote Access Trojan (RAT). Currently still a work in progress, and gets hacked on as time allows. See the `binaries/` folder for prebuilt client executables.
+This is a cross-platform Python 3.6.x Remote Administration Tool (RAT). Currently still a work in progress, and gets hacked on as time allows. See the `binaries/` folder for prebuilt client executables.
 
 **Disclaimer: This RAT is for research purposes only, and should only be used on authorized systems. Accessing a computer system or network without authorization or explicit permission is illegal.**
 
@@ -76,16 +76,16 @@ execute completed.
 If you'd rather not use one the prebuilt binaries, you can easily create your own executable like so:
 
 On Windows you will need:
-  * [Python 2.7.x](https://www.python.org/downloads/)
+  * [Python 3.6.x](https://www.python.org/downloads/)
   * [PyInstaller](http://www.pyinstaller.org/)
-  * [PyCrypto 2.6 for Python 2.7](http://www.voidspace.org.uk/python/modules.shtml#pycrypto)
+  * [PyCrypto 2.6 for Python 3.x](http://www.voidspace.org.uk/python/modules.shtml#pycrypto)
   * [PyWin32](https://sourceforge.net/projects/pywin32/files/pywin32/)
   * [pefile](https://github.com/erocarrera/pefile)
 
 Then run something like `C:\path\to\PyInstaller-3.2\PyInstaller-3.2\pyinstaller.py --onefile basicRAT_client.py` from the basicRAT repo folder and it should generate a `dist/` folder that will contain a stand-alone PE (portable executable).
 
 On Linux/macOS you will need:
-  * [Python 2.7.x](https://www.python.org/downloads/)
+  * [Python 3.6.x](https://www.python.org/downloads/)
   * PyInstaller & PyCrypto - `$ pip install pyinstaller pycrypto`
 
 Then run something like `pyinstaller --onefile basicRAT_client.py` from the basicRAT repo folder and it should generate a `dist/` folder that will contain a stand-alone ELF/Mach-O executable.

